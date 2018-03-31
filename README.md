@@ -1,4 +1,7 @@
 # synology-spk-converter
+
+spk-files from folder structure - spk-files from installed packages - folder structure from spk-files
+
 ##	Installation
 -	Login to your synology station via sh using your admin account
 -	change to sudo (sudo -i) - use admin password when requested
