@@ -1,0 +1,51 @@
+#!/bin/sh
+
+if [ -z $1 ]
+then
+    echo "Folder name is missing"
+    exit 1
+fi
+if [ ! -d $1 ]
+then
+    echo "Package folder $1 not found"
+    exit 1
+fi
+
+if [ ! -d $1 ]
+then
+    echo "Package folder $1 not found"
+    exit 1
+fi
+
+if [ ! -d $1/package ]
+then
+    echo "Package folder '$1/package' not found"
+    exit 1
+fi
+
+if [ ! -d $1/scripts ]
+then
+    echo "Package folder '$1/scripts' not found"
+    exit 1
+fi
+
+if [ ! -f $1/INFO ]
+
+then
+    echo "Package file '$1' not found"
+    exit 1
+fi
+ver=`grep "version=" $1/INFO |cut -d'"' -f 2`
+
+PKG_NAME="${1##*/}"
+echo "Creating '$PKG_NAME-$ver.spk'"
+cpwd=$(pwd)
+cd $1/package
+tar -czf ../package.tgz *
+cd ..
+tar -cf ${cpwd}/$PKG_NAME-$ver.spk INFO scripts package.tgz
+if [ -f $(pwd)/PACKAGE_ICON.PNG ]; then tar -rf ${cpwd}/$PKG_NAME.spk PACKAGE_ICON.PNG; fi
+if [ -f $(pwd)/PACKAGE_ICON_120.PNG ]; then tar -rf ${cpwd}/$PKG_NAME.spk PACKAGE_ICON_120.PNG; fi
+rm -rf package.tgz
+cd ${cpwd}
+echo "File '$PKG_NAME-$ver.spk' created."

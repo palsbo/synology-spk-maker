@@ -1,0 +1,32 @@
+#!/bin/sh
+if [ ! -d /var/packages/$1 ]
+then
+    echo "Package '$1' is not installed"
+    exit 1
+fi
+
+cpwd=$(pwd)
+if [ ! -z $2 ]
+then
+    dirfolder=$2
+else
+    dirfolder=${cpwd}
+fi
+echo ${dirfolder}
+
+BN=${dirfolder}/$1
+
+echo "Creating '$BN' from installed package '$1'"
+rm -rf $BN
+mkdir -p $BN
+TDIR="/var/packages/$1"
+cp -rf $TDIR ${dirfolder}
+cd $BN
+mkdir package
+cp -rf target/* package
+rm target
+unlink target
+rm etc
+unlink etc
+rm enabled
+cd ${cpwd}

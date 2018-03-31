@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="id3-minimized.js"></script>
+    <script src="websocket.js"></script>
+    <script type="text/javascript">
+        wsurl = 'ws://' + window.location.hostname + ':81';
+        var aud;
+
+        function selecting(obj) {
+            var ar = { 'url': obj.value };
+            if (socket) socket.send(JSON.stringify(ar));
+        }
+
+        var ws = new WEBSOCKET(wsurl);
+
+        function progress(oEvent) {
+            console.log("here")
+        }
+
+        function onLoad() {
+            aud = document.getElementById("aud");
+            ws.onstatus = function (stat) {
+                obj = document.getElementById("state");
+                obj.style.color = "white"
+                if (stat) {
+                    console.log("Connection open");
+                    obj.innerHTML = "Online";
+                    obj.style.backgroundColor = "green"
+                } else {
+                    console.log("Connection closed");
+                    obj.innerHTML = "Offline";
+                    obj.style.backgroundColor = "red"
+                }
+            }
+            ws.onmessage = function (data) {
+                var ar = JSON.parse(data);
+                for (id in ar) {
+                    switch (id) {
+                        case 'url':
+                            document.getElementById("prog").value = ar.url;
+                            aud.src = ar.url;
+                            aud.play();
+                            break;
+                        case 'title':
+                            console.log(ar.title)
+                            document.getElementById("title").innerHTML = ar.title;
+                            break;
+                        case 'info':
+                            console.log(ar.info)
+                            document.getElementById("info").innerHTML = ar.info;
+                            break;
+                    }
+                }
+            }
+            ws.begin();
+        }
+    </script>
+</head>
+<body onload="onLoad()">
+    <div style="margin:auto;width:320px">
+        <button style="float:right" id="state"></button>
+        <h1>Webradio @</h1>
+        <audio id="aud" src="http://live-icy.gss.dr.dk:80/A/A07H.mp3" controls preload></audio><br />
+        <div style="margin-bottom:10px" id="title"></div>
+        <div style="margin-bottom:10px" id="info"></div>
+        <select style="width:100%" onchange="selecting(this)" id="prog">
+    	    <option value="">select station</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A18H.mp3">DR Mama</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A02H.mp3">DR Nyheder</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A03H.mp3">DR P1</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A04H.mp3">DR P2 Klassisk</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A05H.mp3">DR P3</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A06H.mp3">DR P4 Bornholm</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A15H.mp3">DR P4 Esbjerg</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A07H.mp3">DR P4 Fyn</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A08H.mp3">DR P4 København</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A09H.mp3">DR P4 Midt & Vest</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A10H.mp3">DR P4 Nordjylland</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A11H.mp3">DR P4 Sjælland</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A12H.mp3">DR P4 Syd</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A13H.mp3">DR P4 Trekanten</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A14H.mp">DR P4 Østjylland</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A25H.mp3">DR P5</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A29H.mp3">DR P6 Beat</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A21H.mp3">DR P7 Mix</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A22H.mp3">DR P8 Jazz</option>
+	    <option value="http://live-icy.gss.dr.dk:8000/A/A24H.mp3">DR Ramasjang/Ultra</option>
+	    <option value="http://onair.100fmlive.dk:80/klassisk_live.mp3">Klassisk Live</option>
+	    <option value="http://stream.novafm.dk:80/nova128">Nova FM</option>
+	    <option value="http://stream.popfm.dk:80/pop128">Pop FM</option>
+	    <option value="http://onair.100fmlive.dk:80/100fm_live.mp3">Radio 100 FM</option>
+	    <option value="http://89.184.153.12:8000/radiocharlie.mp3">Radio Charlie</option>
+	    <option value="http://195.184.101.203/voice128">The Voice</option>
+	    <option value="http://stream128.retro-radio.dk/retro">Retro</option>
+	    <option value="http://stream192.retro-radio.dk/retro">Retro 192</option>
+        </select>
+    </div>
+</body>
+</html>

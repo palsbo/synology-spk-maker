@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ -z $1 ]; then
+    echo "No valid spk-file"
+    echo "use 'spk2dir {spk-file} {folder fir spk-folder}'"
+    exit 1
+fi
+if [ ! -f $1 ]
+then
+    echo "No valid spk-file"
+    echo "use 'spk2dir {spk-file} {folder fir spk-folder}'"
+    exit 1
+fi
+cpwd=$(pwd)
+if [ ! -z $2 ] 
+then
+    dirfolder=$2
+else
+    dirfolder=${cpwd}
+fi
+SPK=$1
+FN="${SPK##*/}"
+BN="${dirfolder}/${FN%.*}"
+EX="${SPK##*.}"
+echo "Creating '$BN' from '$1'"
+mkdir -p $BN
+cd $BN
+tar -xf ${cpwd}/$SPK
+mkdir -p package
+cd package
+tar -xzf ../package.tgz
+cd ..
+rm -rf package.tgz
+cd ${cpwd}

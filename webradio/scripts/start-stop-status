@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Package
+PACKAGE="webradio"
+DNAME="webradio"
+#WDIR=/var/services/web/$PACKAGE
+TDIR=${SYNOPKG_PKGDEST}
+PGM=$TDIR/webradio.js
+
+# Others
+
+case $1 in
+    start)
+	node $PGM > '/var/log/$PACKAGE.log' &
+        exit 0
+        ;;
+    stop)
+	kill `pidof $PACKAGE`
+        exit 0
+        ;;
+    status)
+        exit 0
+        ;;
+    log)
+        exit 0
+        ;;
+    *)
+        exit 1
+        ;;
+esac
